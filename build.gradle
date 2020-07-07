@@ -104,7 +104,7 @@ jacoco {
 
 
 bootJar {
-    archiveName = "service-builder-api.jar"
-    mainClassName = 'io.digitalpatterns.service.builder.api.ServiceBootstrap'
+    archiveName = "identity-service-api.jar"
+    mainClassName = 'io.digitalpatterns.identity.service.IdentityServiceApiApplication'
 }
 

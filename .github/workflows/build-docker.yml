@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE: 'digitalpatterns/identity-service-api/identity-service-api-master'
-      IMAGE_DOCKER_HUB: 'digitalpatterns/identity-service-api
+      IMAGE_DOCKER_HUB: 'digitalpatterns/identity-service-api'
     steps:
       - uses: actions/checkout@v2
       - uses: joschi/setup-jdk@v1

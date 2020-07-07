@@ -3,14 +3,15 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${keycloak.auth.url}/auth/realms/${keycloak.realm}
+          issuer-uri: ${auth.url}/auth/realms/${auth.realm}
 
 server:
-  servlet.context-path: /identity
+  servlet.context-path: /api/identity
   forward-headers-strategy: native
   tomcat:
-    remote-ip-header: x-forwarded-for
-    protocol-header: x-forwarded-proto
+    remoteip:
+      protocol-header: x-forwarded-proto
+      remote-ip-header: x-forwarded-for
   ssl:
     enabled: ${ssl.enabled:false}
     key-alias: cert

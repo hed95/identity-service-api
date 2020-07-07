@@ -24,7 +24,7 @@ public class MrzScanController {
     }
 
     @GetMapping(path="/{correlationId}")
-    public List<MrzScan> getById(@PathVariable  String correlationId) {
+    public List<MrzScan> getById(@PathVariable String correlationId) {
         return mrzService.getScans(correlationId);
     }
 

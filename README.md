@@ -37,3 +37,9 @@ The following environment variables are required to load properties from AWS sec
 Both roles need to be present in order to perform an update.
 
 Only read role required for read.
+
+Swagger UI:
+
+```
+{server address}/swagger/ui.html
+```

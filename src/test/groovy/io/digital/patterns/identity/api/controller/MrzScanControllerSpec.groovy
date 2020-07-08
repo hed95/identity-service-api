@@ -81,13 +81,38 @@ class MrzScanControllerSpec extends Specification {
         mrz.result = 'ok'
 
         expect: '201 response'
-        mvc.perform(post('/mrz/id')
+        mvc.perform(post('/mrz')
         .content(new ObjectMapper().writeValueAsString(mrz))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(jwt()
                         .authorities([new SimpleGrantedAuthority('read'),
                                       new SimpleGrantedAuthority('update')])))
                 .andExpect(status().isCreated())
+    }
+
+    def 'cannot post mrz if correlation id is missing'() {
+        given: 'an MRZ scan'
+        def mrz = new MrzScan()
+        mrz.dateOfScan = new Date()
+        mrz.dob = new Date().toString()
+        mrz.doe = new Date().toString()
+        mrz.documentNumber = 'doc'
+        mrz.faceImage = 'face'.bytes
+        mrz.issuingCountry = 'test'
+        mrz.primaryIdentifier = 'test'
+        mrz.secondaryIdentifier = 'test 2'
+        mrz.mrzString = 'test'
+        mrz.scanningOfficer = 'test'
+        mrz.result = 'ok'
+
+        expect: '201 response'
+        mvc.perform(post('/mrz')
+                .content(new ObjectMapper().writeValueAsString(mrz))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(jwt()
+                        .authorities([new SimpleGrantedAuthority('read'),
+                                      new SimpleGrantedAuthority('update')])))
+                .andExpect(status().isBadRequest())
     }
 
     def 'cannot post mrz if user does not have role'() {
@@ -107,7 +132,7 @@ class MrzScanControllerSpec extends Specification {
         mrz.scanningOfficer = 'test'
 
         expect: '403 response'
-        mvc.perform(post('/mrz/id')
+        mvc.perform(post('/mrz')
                 .content(new ObjectMapper().writeValueAsString(mrz))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(jwt()

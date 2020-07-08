@@ -28,7 +28,7 @@ public class MrzScanController {
         return mrzService.getScans(correlationId);
     }
 
-    @PostMapping(path = "/{correlationId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     @PreAuthorize(value = "@authorizationChecker.hasUpdateRoles(authentication)")
     public void create(@RequestBody @Valid MrzScan mrzScan) {

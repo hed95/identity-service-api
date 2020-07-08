@@ -19,7 +19,8 @@ public class AdminController {
     }
 
     @DeleteMapping(path = "/mrz/{correlationId}")
-    @PreAuthorize(value = "@authorizationChecker.hasAdminRoles(authentication)")
+    @PreAuthorize(value = "@authorizationChecker.hasUpdateRoles(authentication) && " +
+            "@authorizationChecker.hasAdminRoles(authentication)")
     public void delete(@PathVariable String correlationId) {
         mrzService.delete(correlationId);
     }

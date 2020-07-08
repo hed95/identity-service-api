@@ -40,7 +40,9 @@ The following environment variables are required to load properties from AWS sec
 
 4. ***Admin role required to perform admin functions***
 
-5. ***Both roles need to be present in order to perform an update.***
+5. ***Both update and read roles need to be present in order to perform an update.***
+
+6. ***read, update and admin roles need to be present in order to perform any admin functions.***
 
 6. ***Only read role required for read.***
 

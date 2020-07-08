@@ -61,6 +61,7 @@ class AdminControllerSpec extends Specification {
                 .with(jwt()
                         .authorities([
                                 new SimpleGrantedAuthority('read'),
+                                new SimpleGrantedAuthority('update'),
                                 new SimpleGrantedAuthority('admin')])))
                 .andExpect(status().isOk())
 

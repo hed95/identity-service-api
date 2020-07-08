@@ -70,7 +70,7 @@ dependencies {
     implementation 'org.springframework.security:spring-security-oauth2-jose:5.3.2.RELEASE'
     implementation 'org.springframework.security:spring-security-oauth2-resource-server:5.3.2.RELEASE'
     implementation 'org.json:json:20200518'
-
+    implementation 'commons-io:commons-io:2.7'
     implementation 'org.springdoc:springdoc-openapi-ui:1.4.0'
     implementation 'org.springdoc:springdoc-openapi-data-rest:1.4.0'
     implementation 'org.springdoc:springdoc-openapi-security:1.4.0'

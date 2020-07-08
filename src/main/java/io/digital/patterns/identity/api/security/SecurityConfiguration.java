@@ -24,8 +24,10 @@ import java.util.List;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final String ACTUATOR_HEALTH = "/actuator/health";
-    private static final String ACTUATOR_METRICS = "/actuator/metrics";
+    private static final String ACTUATOR_HEALTH = "/actuator/health/**";
+    private static final String ACTUATOR_METRICS = "/actuator/metrics/**";
+    private static final String ACTUATOR_INFO = "/actuator/info/**";
+    private static final String ACTUATOR_LOGGERS = "/actuator/loggers/**";
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuer;
@@ -46,6 +48,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(ACTUATOR_HEALTH).permitAll()
                 .antMatchers(ACTUATOR_METRICS).permitAll()
+                .antMatchers(ACTUATOR_INFO).permitAll()
+                .antMatchers(ACTUATOR_LOGGERS, "GET").permitAll()
+                .antMatchers("/swagger/**").permitAll()
+                .antMatchers("/docs/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

@@ -6,7 +6,6 @@ spring:
           issuer-uri: ${auth.url}/auth/realms/${auth.realm}
 
 server:
-  servlet.context-path: /api/identity
   forward-headers-strategy: native
   tomcat:
     remoteip:
@@ -29,6 +28,22 @@ aws:
   credentials:
     access-key: ${AWS_ACCESS_KEY:}
     secret-Key: ${AWS_SECRET_KEY:}
+
+
+springdoc:
+  api-docs:
+    path: /docs
+    enabled: ${openapi.docs.enabled:true}
+  swagger-ui:
+    path: /swagger/ui.html
+    oauth:
+      realm: ${swagger.auth.realm:elf}
+      client-id: ${swagger.auth.clientId:swagger-ui}
+      scope-separator:
+      additional-query-string-params:
+        -nonce: ${random.int[1,10000]}
+  show-actuator: true
+
 
 management:
   endpoints:

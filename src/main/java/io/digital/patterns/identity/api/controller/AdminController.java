@@ -1,6 +1,8 @@
 package io.digital.patterns.identity.api.controller;
 
 import io.digital.patterns.identity.api.service.MrzService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/admin")
 @PreAuthorize(value = "@authorizationChecker.hasReadRoles(authentication)")
-@Tag(name="Admin", description = "Admin operations API")
+@Tag(name = "Admin", description = "Admin operations API")
 public class AdminController {
 
     private final MrzService mrzService;
@@ -23,7 +25,9 @@ public class AdminController {
     @DeleteMapping(path = "/mrz/{correlationId}")
     @PreAuthorize(value = "@authorizationChecker.hasUpdateRoles(authentication) && " +
             "@authorizationChecker.hasAdminRoles(authentication)")
-    public void delete(@PathVariable String correlationId) {
+    @Operation(summary = "Remove MRZ scans for a given correlation id")
+    public void delete(@Parameter(description = "ID that can link a list of scans", required = true)
+                       @PathVariable String correlationId) {
         mrzService.delete(correlationId);
     }
 

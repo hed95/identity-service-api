@@ -1,4 +1,4 @@
-package io.digital.patterns.identity.service.security;
+package io.digital.patterns.identity.api.security;
 
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;

@@ -1,4 +1,4 @@
-package io.digital.patterns.identity.service;
+package io.digital.patterns.identity.api;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;

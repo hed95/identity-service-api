@@ -1,7 +1,7 @@
-package io.digital.patterns.identity.service;
+package io.digital.patterns.identity.api.service;
 
 
-import io.digital.patterns.identity.service.model.MrzScan;
+import io.digital.patterns.identity.api.model.MrzScan;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

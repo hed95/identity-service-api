@@ -1,4 +1,4 @@
-package io.digital.patterns.identity.service.model;
+package io.digital.patterns.identity.api.model;
 
 import lombok.Data;
 

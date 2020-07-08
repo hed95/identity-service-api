@@ -1,4 +1,4 @@
-package io.digital.patterns.identity.service.security;
+package io.digital.patterns.identity.api.security;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;

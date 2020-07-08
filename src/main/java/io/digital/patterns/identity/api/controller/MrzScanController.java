@@ -1,7 +1,7 @@
-package io.digital.patterns.identity.service.controller;
+package io.digital.patterns.identity.api.controller;
 
-import io.digital.patterns.identity.service.MrzService;
-import io.digital.patterns.identity.service.model.MrzScan;
+import io.digital.patterns.identity.api.service.MrzService;
+import io.digital.patterns.identity.api.model.MrzScan;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

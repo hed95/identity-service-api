@@ -1,9 +1,9 @@
-package io.digital.patterns.identity.service.controller
+package io.digital.patterns.identity.api.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.digital.patterns.identity.service.MrzService
-import io.digital.patterns.identity.service.model.MrzScan
-import io.digital.patterns.identity.service.security.AuthorizationChecker
+import io.digital.patterns.identity.api.model.MrzScan
+import io.digital.patterns.identity.api.security.AuthorizationChecker
+import io.digital.patterns.identity.api.service.MrzService
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest

@@ -25,6 +25,7 @@ The following environment variables are required to load properties from AWS sec
   "auth.realm": "elf",
   "api.read.roles": "read-role, read-role2",
   "api.update.roles": "update-role, update-role2",
+  "api.admin.roles": "admin-role, admin-role2",
   "aws.s3.identity.scanData": "scans"
 }
 ```
@@ -37,9 +38,13 @@ The following environment variables are required to load properties from AWS sec
 
 3. ***If update roles not configured then the caller will get a 403 when performing a POST***
 
-4. ***Both roles need to be present in order to perform an update.***
+4. ***Admin role required to perform admin functions***
 
-5. ***Only read role required for read.***
+5. ***Both roles need to be present in order to perform an update.***
+
+6. ***Only read role required for read.***
+
+If you do not wish the admin function to ever be invoked then do not provide ```api.admin.roles``` 
 
 ### Swagger UI
 

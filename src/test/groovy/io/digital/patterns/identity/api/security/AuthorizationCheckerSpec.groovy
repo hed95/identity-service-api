@@ -7,7 +7,7 @@ import static org.springframework.security.oauth2.jwt.JwtClaimNames.SUB
 
 class AuthorizationCheckerSpec extends Specification {
 
-    def underTest = new AuthorizationChecker(['read'], ['update'])
+    def underTest = new AuthorizationChecker(['read'], ['update'], ['admin'])
     def converter = new KeycloakJwtConverter()
 
     def 'returns true if authentication has read role'() {
@@ -34,7 +34,7 @@ class AuthorizationCheckerSpec extends Specification {
     def 'returns false if no read role configured'() {
 
         given: 'a jwt token'
-        def underTest = new AuthorizationChecker([], ['update'])
+        def underTest = new AuthorizationChecker([], ['update'], [])
         Jwt jwt = Jwt.withTokenValue('token')
                 .header("alg", "none")
                 .claim(SUB, "user")
@@ -56,7 +56,7 @@ class AuthorizationCheckerSpec extends Specification {
     def 'returns false if no update role configured'() {
 
         given: 'a jwt token'
-        def underTest = new AuthorizationChecker([], [])
+        def underTest = new AuthorizationChecker([], [], [])
         Jwt jwt = Jwt.withTokenValue('token')
                 .header("alg", "none")
                 .claim(SUB, "user")
@@ -135,5 +135,48 @@ class AuthorizationCheckerSpec extends Specification {
 
         then: 'result should be true'
         result
+    }
+
+    def 'returns true if authentication has admin role'() {
+
+        given: 'a jwt token'
+        Jwt jwt = Jwt.withTokenValue('token')
+                .header("alg", "none")
+                .claim(SUB, "user")
+                .claim("email", "email")
+                .claim("realm_access", [
+                        'roles' : ['admin']
+                ])
+                .claim("scope", "read").build()
+
+        def authentication = converter.convert(jwt)
+
+        when: 'authorization checked'
+        def result = underTest.hasAdminRoles(authentication)
+
+        then: 'result should be true'
+        result
+    }
+
+    def 'returns false if no admin role configured'() {
+
+        given: 'a jwt token'
+        def underTest = new AuthorizationChecker([], ['update'], [])
+        Jwt jwt = Jwt.withTokenValue('token')
+                .header("alg", "none")
+                .claim(SUB, "user")
+                .claim("email", "email")
+                .claim("realm_access", [
+                        'roles' : ['fake']
+                ])
+                .claim("scope", "read").build()
+
+        def authentication = converter.convert(jwt)
+
+        when: 'authorization checked'
+        def result = underTest.hasAdminRoles(authentication)
+
+        then: 'result should be false'
+        !result
     }
 }

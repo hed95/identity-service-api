@@ -33,7 +33,7 @@ class MrzScanControllerSpec extends Specification {
     private MrzService mrzService = Mock()
 
     @SpringBean
-    private AuthorizationChecker authorizationChecker = new AuthorizationChecker(['read'], ['update'])
+    private AuthorizationChecker authorizationChecker = new AuthorizationChecker(['read'], ['update'], ['admin'])
 
     @SpringBean
     private JwtDecoder jwtDecoder = Mock()

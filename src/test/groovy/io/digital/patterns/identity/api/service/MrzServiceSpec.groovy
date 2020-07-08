@@ -124,4 +124,52 @@ class MrzServiceSpec extends Specification {
         scans.last().primaryIdentifier == 'test2'
 
     }
+
+    def 'can delete'() {
+        given: 'a mrz scan'
+        MrzScan mrz = new MrzScan()
+        mrz.correlationId = 'newId1'
+        mrz.dateOfScan = new Date()
+        mrz.dob = new Date().toString()
+        mrz.doe = new Date().toString()
+        mrz.documentNumber = 'doc'
+        mrz.faceImage = 'face'
+        mrz.issuingCountry = 'test'
+        mrz.primaryIdentifier = 'test'
+        mrz.secondaryIdentifier = 'test 2'
+        mrz.mrzString = 'test'
+        mrz.scanningOfficer = 'test'
+        mrz.result = 'ok'
+
+        and: 'scan is persisted'
+        mrzService.create(mrz)
+
+        and: 'another scan'
+        mrz = new MrzScan()
+        mrz.correlationId = 'newId1'
+        mrz.dateOfScan = new Date()
+        mrz.dob = new Date().toString()
+        mrz.doe = new Date().toString()
+        mrz.documentNumber = 'doc2'
+        mrz.faceImage = 'face2'
+        mrz.issuingCountry = 'test2'
+        mrz.primaryIdentifier = 'test2'
+        mrz.secondaryIdentifier = 'test 22'
+        mrz.mrzString = 'test2'
+        mrz.scanningOfficer = 'test2'
+        mrz.result = 'ok'
+
+        and: 'another scan with the same id is saved'
+        mrzService.create(mrz)
+
+
+        when: 'a call to delete is made'
+        mrzService.delete('newId1')
+
+        and: 'a call then is made to get scans'
+        def scans = mrzService.getScans('newId1')
+
+        then: 'scans should be empty'
+        scans.size() == 0
+    }
 }

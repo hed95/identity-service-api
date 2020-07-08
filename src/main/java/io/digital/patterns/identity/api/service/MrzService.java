@@ -95,4 +95,14 @@ public class MrzService {
                 .toString();
 
     }
+
+    public void delete(String correlationId) {
+        log.info("Deleting scans with {} as id", correlationId);
+        ObjectListing objectListing = amazonS3
+                .listObjects(awsProperties.getBucketName(), correlationId);
+
+        objectListing.getObjectSummaries().forEach((summary) ->
+                amazonS3.deleteObject(awsProperties.getBucketName(), summary.getKey()));
+        log.info("Deleted all contents under {}",correlationId);
+    }
 }

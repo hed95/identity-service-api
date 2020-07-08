@@ -13,13 +13,16 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AuthorizationChecker {
 
-    public final List<String> readRoles;
-    public final List<String> updateRoles;
+    private final List<String> readRoles;
+    private final List<String> updateRoles;
+    private final List<String> adminRoles;
 
     public AuthorizationChecker( @Value("${api.read.roles:}")List<String> readRoles,
-                                 @Value("${api.update.roles:}")List<String> updateRoles) {
+                                 @Value("${api.update.roles:}")List<String> updateRoles,
+                                 @Value("${api.admin.roles:}")List<String> adminRoles) {
         this.readRoles = readRoles;
         this.updateRoles = updateRoles;
+        this.adminRoles = adminRoles;
     }
 
     public boolean hasReadRoles(Authentication authentication) {
@@ -34,6 +37,13 @@ public class AuthorizationChecker {
             return false;
         }
         return getRoles(authentication).stream().anyMatch(updateRoles::contains);
+    }
+
+    public boolean hasAdminRoles(Authentication authentication) {
+        if (adminRoles.isEmpty()) {
+            return false;
+        }
+        return getRoles(authentication).stream().anyMatch(adminRoles::contains);
     }
 
     private List<String> getRoles(Authentication authentication) {

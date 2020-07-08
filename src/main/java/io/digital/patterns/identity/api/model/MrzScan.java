@@ -24,7 +24,7 @@ public class MrzScan {
     private String issuingCountry;
 
     @NotNull
-    private byte[] faceImage;
+    private String faceImage;
 
     @NotNull
     private String dob;

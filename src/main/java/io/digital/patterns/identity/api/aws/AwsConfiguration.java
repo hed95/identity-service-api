@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class AwsConfiguration {
@@ -29,6 +30,7 @@ public class AwsConfiguration {
     }
 
     @Bean
+    @Primary
     public AmazonS3 awsS3Client() {
         return AmazonS3ClientBuilder.standard().withRegion(Regions.fromName(awsProperties.getRegion()))
                 .withCredentials(credentials()).build();

@@ -72,7 +72,7 @@ class MrzScanControllerSpec extends Specification {
         mrz.dob = new Date().toString()
         mrz.doe = new Date().toString()
         mrz.documentNumber = 'doc'
-        mrz.faceImage = 'face'.bytes
+        mrz.faceImage = 'face'
         mrz.issuingCountry = 'test'
         mrz.primaryIdentifier = 'test'
         mrz.secondaryIdentifier = 'test 2'
@@ -97,7 +97,7 @@ class MrzScanControllerSpec extends Specification {
         mrz.dob = new Date().toString()
         mrz.doe = new Date().toString()
         mrz.documentNumber = 'doc'
-        mrz.faceImage = 'face'.bytes
+        mrz.faceImage = 'face'
         mrz.issuingCountry = 'test'
         mrz.primaryIdentifier = 'test'
         mrz.secondaryIdentifier = 'test 2'
@@ -124,7 +124,7 @@ class MrzScanControllerSpec extends Specification {
         mrz.dob = new Date().toString()
         mrz.doe = new Date().toString()
         mrz.documentNumber = 'doc'
-        mrz.faceImage = 'face'.bytes
+        mrz.faceImage = 'face'
         mrz.issuingCountry = 'test'
         mrz.primaryIdentifier = 'test'
         mrz.secondaryIdentifier = 'test 2'

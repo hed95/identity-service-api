@@ -11,10 +11,14 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
+import org.springframework.boot.actuate.endpoint.http.ActuatorMediaType;
+import org.springframework.boot.actuate.endpoint.web.EndpointMediaTypes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @SecurityScheme(
@@ -40,5 +44,19 @@ public class OpenApiConfiguration {
                 .info(new Info().title("Identity Service API")
                         .version("1.0"))
                 .addSecurityItem(securityItem);
+    }
+
+    @Configuration
+    public static class ActuatorEndpointConfig {
+
+        private static final List<String> MEDIA_TYPES = Arrays
+                .asList("application/json", ActuatorMediaType.V2_JSON,
+                        ActuatorMediaType.V3_JSON,
+                        "application/hal+json");
+
+        @Bean
+        public EndpointMediaTypes endpointMediaTypes() {
+            return new EndpointMediaTypes(MEDIA_TYPES, MEDIA_TYPES);
+        }
     }
 }

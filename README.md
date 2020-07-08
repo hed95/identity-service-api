@@ -2,7 +2,6 @@
 
 # Identity Service API
 
-
 An api for storing both MRZ scans and biometric information.
 
 This API is fully secured and stores the data in S3.
@@ -30,15 +29,19 @@ The following environment variables are required to load properties from AWS sec
 }
 ```
 
-***Audience is required and checked. If the audience do not match a 403 will be returned***
-***If read roles not configured then the caller will get a 403***
-***If update roles not configured then the caller will get a 403***
+### Authorization levels
 
-Both roles need to be present in order to perform an update.
+1. ***Audience is required and checked. If the audience do not match a 403 will be returned***
 
-Only read role required for read.
+2. ***If read roles not configured then the caller will get a 403 when performing a GET***
 
-Swagger UI:
+3. ***If update roles not configured then the caller will get a 403 when performing a POST***
+
+4. ***Both roles need to be present in order to perform an update.***
+
+5. ***Only read role required for read.***
+
+### Swagger UI
 
 ```
 {server address}/swagger/ui.html

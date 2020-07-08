@@ -1,6 +1,7 @@
 package io.digital.patterns.identity.api.controller;
 
 import io.digital.patterns.identity.api.service.MrzService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/admin")
 @PreAuthorize(value = "@authorizationChecker.hasReadRoles(authentication)")
+@Tag(name="Admin", description = "Admin operations API")
 public class AdminController {
 
     private final MrzService mrzService;

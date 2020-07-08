@@ -55,7 +55,7 @@ class MrzServiceSpec extends Specification {
         mrz.dob = new Date().toString()
         mrz.doe = new Date().toString()
         mrz.documentNumber = 'doc'
-        mrz.faceImage = 'face'.bytes
+        mrz.faceImage = 'face'
         mrz.issuingCountry = 'test'
         mrz.primaryIdentifier = 'test'
         mrz.secondaryIdentifier = 'test 2'
@@ -85,7 +85,7 @@ class MrzServiceSpec extends Specification {
         mrz.dob = new Date().toString()
         mrz.doe = new Date().toString()
         mrz.documentNumber = 'doc'
-        mrz.faceImage = 'face'.bytes
+        mrz.faceImage = 'face'
         mrz.issuingCountry = 'test'
         mrz.primaryIdentifier = 'test'
         mrz.secondaryIdentifier = 'test 2'
@@ -103,7 +103,7 @@ class MrzServiceSpec extends Specification {
         mrz.dob = new Date().toString()
         mrz.doe = new Date().toString()
         mrz.documentNumber = 'doc2'
-        mrz.faceImage = 'face2'.bytes
+        mrz.faceImage = 'face2'
         mrz.issuingCountry = 'test2'
         mrz.primaryIdentifier = 'test2'
         mrz.secondaryIdentifier = 'test 22'

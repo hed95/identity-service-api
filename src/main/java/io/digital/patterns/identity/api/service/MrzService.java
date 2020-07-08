@@ -91,7 +91,7 @@ public class MrzService {
         String timeStamp = FORMAT.format(submissionDate);
 
         return keyBuilder.append(businessKey)
-                .append("/").append("/").append(email).append("-").append(timeStamp).append(".json")
+                .append("/").append(email).append("-").append(timeStamp).append(".json")
                 .toString();
 
     }

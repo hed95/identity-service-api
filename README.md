@@ -20,13 +20,20 @@ The following environment variables are required to load properties from AWS sec
 
 ```json
 {
-  "api.allowedAudiences": "x",
+  "api.allowedAudiences": "ui",
   "auth.url": "https://keycloak.lodev",
   "auth.realm": "elf",
   "api.read.roles": "read-role, read-role2",
   "api.update.roles": "update-role, update-role2",
   "api.admin.roles": "admin-role, admin-role2",
-  "aws.s3.identity.scanData": "scans"
+  "aws.s3.identity.scanData": "scans",
+  "openapi.docs.enabled" : true,
+  "swagger.auth.realm" : "elf",
+  "swagger.auth.clientId" : "swagger-ui",
+  "ssl.enabled" : false,
+  "javax.net.ssl.trustStore" : "/etc/keystore/cacerts",
+  "javax.net.ssl.trustStorePassword" : "changeit",
+  "javax.net.ssl.trustStoreType" : "PKCS12"
 }
 ```
 

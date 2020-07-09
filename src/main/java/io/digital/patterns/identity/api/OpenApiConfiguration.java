@@ -9,9 +9,7 @@ import io.swagger.v3.oas.annotations.security.OAuthScope;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.PathParameter;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
@@ -21,7 +19,6 @@ import org.springframework.boot.actuate.endpoint.web.EndpointMediaTypes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -53,15 +50,14 @@ public class OpenApiConfiguration {
                 .addSecurityItem(securityItem);
     }
 
-
     @Bean
     public OpenApiCustomiser actuatorOpenApiCustomiser() {
-        final Pattern pathPathern = Pattern.compile("\\{(.*?)}");
+        final Pattern pathPattern = Pattern.compile("\\{(.*?)}");
         return openApi -> openApi.getPaths().entrySet().stream()
                 .filter(stringPathItemEntry -> stringPathItemEntry.getKey().startsWith("/actuator/"))
                 .forEach(stringPathItemEntry -> {
                     String path = stringPathItemEntry.getKey();
-                    Matcher matcher = pathPathern.matcher(path);
+                    Matcher matcher = pathPattern.matcher(path);
                     while (matcher.find()) {
                         String pathParam = matcher.group(1);
                         PathItem pathItem = stringPathItemEntry.getValue();

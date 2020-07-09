@@ -43,6 +43,7 @@ springdoc:
       additional-query-string-params:
         -nonce: ${random.int[1,10000]}
   show-actuator: true
+  paths-to-exclude: "/error/**"
 
 
 management:

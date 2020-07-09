@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/admin")
 @PreAuthorize(value = "@authorizationChecker.hasReadRoles(authentication)")
-@Tag(name = "Admin", description = "Admin operations API")
+@Tag(name = "Admin", description = "Advanced administrator functions")
 public class AdminController {
 
     private final MrzService mrzService;

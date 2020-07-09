@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/mrz")
 @PreAuthorize(value = "@authorizationChecker.hasReadRoles(authentication)")
-@Tag(name="MRZ scans", description = "MRZ scan API")
+@Tag(name="MRZ scans", description = "Storing and retrieving mrz scans from repository")
 public class MrzScanController {
 
     private final MrzService mrzService;

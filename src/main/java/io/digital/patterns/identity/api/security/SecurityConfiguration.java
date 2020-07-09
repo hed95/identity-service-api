@@ -28,11 +28,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String ACTUATOR_METRICS = "/actuator/metrics/**";
     private static final String ACTUATOR_INFO = "/actuator/info/**";
     private static final String ACTUATOR_LOGGERS = "/actuator/loggers/**";
+    private static final String ACTUATOR = "/actuator";
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuer;
     @Value("${api.allowedAudiences}")
     private List<String> allowedAudiences;
+    @Value("${api.admin.roles:}")
+    private List<String> adminRoles;
+
 
     private final KeycloakJwtConverter keycloakJwtConverter;
 
@@ -46,12 +50,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(final HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(ACTUATOR_HEALTH).permitAll()
-                .antMatchers(ACTUATOR_METRICS).permitAll()
-                .antMatchers(ACTUATOR_INFO).permitAll()
+                .antMatchers(ACTUATOR_HEALTH, "GET").permitAll()
+                .antMatchers(ACTUATOR_METRICS, "GET").permitAll()
+                .antMatchers(ACTUATOR_INFO, "GET").permitAll()
                 .antMatchers(ACTUATOR_LOGGERS, "GET").permitAll()
+                .antMatchers(ACTUATOR, "GET").permitAll()
                 .antMatchers("/swagger/**").permitAll()
                 .antMatchers("/docs/**").permitAll()
+                .antMatchers(ACTUATOR_LOGGERS, "POST")
+                    .hasAnyRole(adminRoles.toArray(new String[]{}))
                 .anyRequest()
                 .authenticated()
                 .and()

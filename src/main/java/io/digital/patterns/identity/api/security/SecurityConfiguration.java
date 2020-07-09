@@ -58,7 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger/**").permitAll()
                 .antMatchers("/docs/**").permitAll()
                 .antMatchers(ACTUATOR_LOGGERS, "POST")
-                    .hasAnyRole(adminRoles.toArray(new String[]{}))
+                    .hasAnyAuthority(adminRoles.toArray(new String[]{}))
                 .anyRequest()
                 .authenticated()
                 .and()

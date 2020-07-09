@@ -53,13 +53,33 @@ public class OpenApiConfiguration {
                 .addSecurityItem(securityItem);
     }
 
+
+    @Bean
+    public OpenApiCustomiser actuatorOpenApiCustomiser() {
+        final Pattern pathPathern = Pattern.compile("\\{(.*?)}");
+        return openApi -> openApi.getPaths().entrySet().stream()
+                .filter(stringPathItemEntry -> stringPathItemEntry.getKey().startsWith("/actuator/"))
+                .forEach(stringPathItemEntry -> {
+                    String path = stringPathItemEntry.getKey();
+                    Matcher matcher = pathPathern.matcher(path);
+                    while (matcher.find()) {
+                        String pathParam = matcher.group(1);
+                        PathItem pathItem = stringPathItemEntry.getValue();
+                        pathItem.readOperations().forEach(operation ->
+                                operation
+                                        .addParametersItem(new PathParameter()
+                                                .name(pathParam).schema(new StringSchema())));
+                    }
+                });
+    }
+
     @Configuration
     public static class ActuatorEndpointConfig {
 
         private static final List<String> MEDIA_TYPES = Arrays
                 .asList("application/json", ActuatorMediaType.V2_JSON,
                         ActuatorMediaType.V3_JSON,
-                        "application/hal+json");
+                        "application/hal+json", TextFormat.CONTENT_TYPE_004);
 
         @Bean
         public EndpointMediaTypes endpointMediaTypes() {

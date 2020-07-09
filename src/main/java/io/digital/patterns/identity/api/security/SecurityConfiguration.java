@@ -3,6 +3,7 @@ package io.digital.patterns.identity.api.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -51,15 +52,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(final HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(ACTUATOR_HEALTH, "GET").permitAll()
-                .antMatchers(ACTUATOR_METRICS, "GET").permitAll()
-                .antMatchers(ACTUATOR_INFO, "GET").permitAll()
-                .antMatchers(ACTUATOR_LOGGERS, "GET").permitAll()
+                .antMatchers(HttpMethod.GET, ACTUATOR_HEALTH).permitAll()
+                .antMatchers(HttpMethod.GET,ACTUATOR_METRICS).permitAll()
+                .antMatchers(HttpMethod.GET,ACTUATOR_INFO).permitAll()
+                .antMatchers(HttpMethod.GET, ACTUATOR_LOGGERS).permitAll()
                 .antMatchers(ACTUATOR, "GET").permitAll()
-                .antMatchers(ACTUATOR_PROMETHEUS, "GET").permitAll()
+                .antMatchers(HttpMethod.GET, ACTUATOR_PROMETHEUS).permitAll()
                 .antMatchers("/swagger/**").permitAll()
                 .antMatchers("/docs/**").permitAll()
-                .antMatchers(ACTUATOR_LOGGERS, "POST")
+                .antMatchers(HttpMethod.POST,ACTUATOR_LOGGERS)
                     .hasAnyAuthority(adminRoles.toArray(new String[]{}))
                 .anyRequest()
                 .authenticated()

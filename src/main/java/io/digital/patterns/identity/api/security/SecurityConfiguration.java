@@ -28,6 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String ACTUATOR_METRICS = "/actuator/metrics/**";
     private static final String ACTUATOR_INFO = "/actuator/info/**";
     private static final String ACTUATOR_LOGGERS = "/actuator/loggers/**";
+    private static final String ACTUATOR_PROMETHEUS = "/actuator/prometheus/**";
     private static final String ACTUATOR = "/actuator";
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
@@ -55,6 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(ACTUATOR_INFO, "GET").permitAll()
                 .antMatchers(ACTUATOR_LOGGERS, "GET").permitAll()
                 .antMatchers(ACTUATOR, "GET").permitAll()
+                .antMatchers(ACTUATOR_PROMETHEUS, "GET").permitAll()
                 .antMatchers("/swagger/**").permitAll()
                 .antMatchers("/docs/**").permitAll()
                 .antMatchers(ACTUATOR_LOGGERS, "POST")

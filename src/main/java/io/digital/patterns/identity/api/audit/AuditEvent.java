@@ -1,4 +1,4 @@
-package io.digital.patterns.identity.api.security;
+package io.digital.patterns.identity.api.audit;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

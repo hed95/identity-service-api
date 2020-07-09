@@ -1,4 +1,4 @@
-package io.digital.patterns.identity.api.security;
+package io.digital.patterns.identity.api.audit;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -18,13 +18,13 @@ import java.util.Date;
 
 @Component
 @Slf4j
-public class UserIdMDCFilter extends OncePerRequestFilter {
+public class AuditEventFilter extends OncePerRequestFilter {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    AntPathRequestMatcher matcher = new AntPathRequestMatcher("/actuator/health", "GET");
+    AntPathRequestMatcher matcher = new AntPathRequestMatcher("/actuator/**", "GET");
 
-    public UserIdMDCFilter(ApplicationEventPublisher applicationEventPublisher) {
+    public AuditEventFilter(ApplicationEventPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -47,13 +47,10 @@ public class UserIdMDCFilter extends OncePerRequestFilter {
                             request.getAuthType()
                     );
                     applicationEventPublisher.publishEvent(event);
-
                     MDC.put("userId", authentication.getName());
-                    log.debug("Executing {}", request.getRequestURI());
                 }
                 filterChain.doFilter(request, response);
             } finally {
-                log.debug("Executed {}", request.getRequestURI());
                 MDC.remove("userId");
             }
         } else {

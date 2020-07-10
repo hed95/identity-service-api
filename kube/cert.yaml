@@ -1,0 +1,26 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: identity-service-api-pod-cert
+spec:
+  secretName: identity-service-api-pod-cert
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  isCA: false
+  keySize: 2048
+  keyAlgorithm: rsa
+  keyEncoding: pkcs1
+  issuerRef:
+    name: platform-ca
+    kind: ClusterIssuer
+  usages:
+    - server auth
+    - client auth
+  dnsNames:
+    - identity-service-api
+    - identity-service-api.{{ .KUBE_NAMESPACE }}
+    - identity-service-api.{{ .KUBE_NAMESPACE }}.svc
+    - identity-service-api.{{ .KUBE_NAMESPACE }}.svc.cluster.local
+    - localhost
+  ipAddresses:
+    - 127.0.0.1

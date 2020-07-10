@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-service-api
+  labels:
+    service: identity-service-api
+spec:
+  selector:
+    matchLabels:
+      name: identity-service-api
+  replicas: 3
+  revisionHistoryLimit: 3
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        name: identity-service-api
+        service: identity-service-api
+    spec:
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+      containers:
+      - name: api
+        image: "quay.io/ukhomeofficedigital/identity-service-api:{{ .IDENTIY_SERVICE_API_TAG} }}"
+        imagePullPolicy: Always
+        securityContext:
+          runAsUser: 1000
+          runAsNonRoot: true
+        command: ["/bin/sh"]
+        args: ["-c", "/app/run.sh -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=/etc/keystore/cacerts -Djavax.net.ssl.trustStoreType=pkcs12 -Djavax.net.ssl.trustStorePassword=changeit -jar /app/identity-service-api.jar"]
+        env:
+          - name: AWS_SECRETS_MANAGER_ENABLED
+            value: {{ .IDENTIY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED }}
+          - name: AWS_REGION
+            value: {{ .IDENTIY_SERVICE_API_AWS_REGION }}
+          - name: AWS_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: identity-service-api
+                key: awsAccessKeyId
+          - name: AWS_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: identity-service-api
+                key: awsSecretAccessKey
+          - name: SPRING_PROFILES_ACTIVE
+            value: {{ .IDENTIY_SERVICE_API_SPRING_PROFILE_ACTIVE }}
+        ports:
+          - name: https
+            containerPort: 8443
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            scheme: HTTPS
+            path: /actuator/health
+            port: 8443
+          initialDelaySeconds: 300
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            scheme: HTTPS
+            path: /actuator/health
+            port: 8443
+          initialDelaySeconds: 30
+          timeoutSeconds: 1
+        resources:
+          requests:
+            memory: "1024Mi"
+            cpu: "1000m"
+          limits:
+            memory: "1024Mi"
+            cpu: "1000m"
+        volumeMounts:
+          - name: certs
+            mountPath: /certs
+            readOnly: true
+      volumes:
+        - name: certs
+          secret:
+            secretName: identity-service-api-pod-cert

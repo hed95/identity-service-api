@@ -53,7 +53,14 @@ The following environment variables are required to load properties from AWS sec
 
 6. ***Only read role required for read.***
 
-If you do not wish the admin function to ever be invoked then do not provide ```api.admin.roles``` 
+If you do not want to expose the admin function then provide the following property:
+
+```
+admin.controller.enabled: false
+```
+
+This will prevent the admin endpoint from ever being exposed.
+
 
 ### Swagger UI
 

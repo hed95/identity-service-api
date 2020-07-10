@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @ConditionalOnProperty(prefix = "admin.controller", name = "enabled", matchIfMissing = true)
 @RequestMapping(path = "/admin")
-@PreAuthorize(value = "@authorizationChecker.hasReadRoles(authentication)")
+@PreAuthorize(value = "@authorizationChecker.hasReadRoles(authentication) " +
+        " && @authorizationChecker.hasAdminRoles(authentication)")
 @Tag(name = "Admin", description = "Advanced administrator functions")
 public class AdminController {
 
@@ -25,8 +26,7 @@ public class AdminController {
     }
 
     @DeleteMapping(path = "/mrz/{correlationId}")
-    @PreAuthorize(value = "@authorizationChecker.hasUpdateRoles(authentication) && " +
-            "@authorizationChecker.hasAdminRoles(authentication)")
+    @PreAuthorize(value = "@authorizationChecker.hasUpdateRoles(authentication)")
     @Operation(summary = "Remove MRZ scans for a given correlation id")
     public void delete(@Parameter(description = "ID that can link a list of scans", required = true)
                        @PathVariable String correlationId) {

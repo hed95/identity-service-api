@@ -4,6 +4,7 @@ import io.digital.patterns.identity.api.service.MrzService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@ConditionalOnProperty(prefix = "admin.controller", name = "enabled", matchIfMissing = true)
 @RequestMapping(path = "/admin")
 @PreAuthorize(value = "@authorizationChecker.hasReadRoles(authentication)")
 @Tag(name = "Admin", description = "Advanced administrator functions")

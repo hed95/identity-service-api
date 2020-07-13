@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: identity-service-api
+  name: {{ .IDENTITY_SERVICE_API_NAME }}
 spec:
   egress:
     - {}
@@ -16,7 +16,7 @@ spec:
           protocol: TCP
   podSelector:
     matchLabels:
-      name: identity-service-api
+      name: {{ .IDENTITY_SERVICE_API_NAME }}
   policyTypes:
     - Ingress
     - Egress

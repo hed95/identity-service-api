@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: identity-service-api
+  name: {{ .IDENTITY_SERVICE_API_NAME }}
   labels:
-    service: identity-service-api
+    service: {{ .IDENTITY_SERVICE_API_NAME }}
 spec:
   selector:
     matchLabels:
-      name: identity-service-api
+      name: {{ .IDENTITY_SERVICE_API_NAME }}
   replicas: 3
   revisionHistoryLimit: 3
   minReadySeconds: 5
@@ -19,21 +19,21 @@ spec:
   template:
     metadata:
       labels:
-        name: identity-service-api
-        service: identity-service-api
+        name: {{ .IDENTITY_SERVICE_API_NAME }}
+        service: {{ .IDENTITY_SERVICE_API_NAME }}
     spec:
       restartPolicy: Always
       securityContext:
         fsGroup: 1000
       containers:
       - name: api
-        image: "quay.io/ukhomeofficedigital/identity-service-api:{{ .IDENTIY_SERVICE_API_TAG} }}"
+        image: "quay.io/ukhomeofficedigital/identity-service-api:{{ .IDENTIY_SERVICE_API_TAG }}"
         imagePullPolicy: Always
         securityContext:
           runAsUser: 1000
           runAsNonRoot: true
         command: ["/bin/sh"]
-        args: ["-c", "/app/run.sh -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=/etc/keystore/cacerts -Djavax.net.ssl.trustStoreType=pkcs12 -Djavax.net.ssl.trustStorePassword=changeit -jar /app/identity-service-api.jar"]
+        args: ["-c", "/app/run.sh -Djava.security.egd=file:/dev/./urandom -Djavax.net.ssl.trustStore=/etc/keystore/cacerts -Djavax.net.ssl.trustStoreType=pkcs12 -Djavax.net.ssl.trustStorePassword=changeit -jar /app/{{ .IDENTITY_SERVICE_API_NAME }}.jar"]
         env:
           - name: AWS_SECRETS_MANAGER_ENABLED
             value: {{ .IDENTIY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED }}
@@ -42,12 +42,12 @@ spec:
           - name: AWS_ACCESS_KEY
             valueFrom:
               secretKeyRef:
-                name: identity-service-api
+                name: {{ .IDENTITY_SERVICE_API_NAME }}
                 key: awsAccessKeyId
           - name: AWS_SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: identity-service-api
+                name: {{ .IDENTITY_SERVICE_API_NAME }}
                 key: awsSecretAccessKey
           - name: SPRING_PROFILES_ACTIVE
             value: {{ .IDENTIY_SERVICE_API_SPRING_PROFILE_ACTIVE }}
@@ -83,4 +83,4 @@ spec:
       volumes:
         - name: certs
           secret:
-            secretName: identity-service-api-pod-cert
+            secretName: {{ .IDENTITY_SERVICE_API_NAME }}-pod-cert

@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: identity-service-api
+  name: {{ .IDENTITY_SERVICE_API_NAME }}
   labels:
     cert-manager.io/solver: http01
   annotations:
@@ -18,7 +18,7 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: identity-service-api
+              serviceName: {{ .IDENTITY_SERVICE_API_NAME }}
               servicePort: 8443
             path: /
   tls:

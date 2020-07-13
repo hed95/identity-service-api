@@ -52,16 +52,16 @@ pipeline:
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd
     secrets:
-      - source: DEV_IDENTIY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
-        target: IDENTIY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
+      - source: DEV_IDENTITY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
+        target: IDENTITY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
       - source: AWS_REGION
-        target: IDENTIY_SERVICE_API_AWS_REGION
+        target: IDENTITY_SERVICE_API_AWS_REGION
       - source: DEV_IDENTITY_SERVICE_API_URL
-        target: IDENTIY_SERVICE_API_URL
+        target: IDENTITY_SERVICE_API_URL
       - source: DEV_IDENTITY_SERVICE_API_AWS_ACCESS_KEY_ID
-        target: IDENTIY_SERVICE_API_AWS_ACCESS_KEY_ID
-      - source: DEV_IDENTITY_SERVICE_API_SECRET_ACCESS_KEY
-        target: IDENTIY_SERVICE_API_AWS_SECRET_ACCESS_KEY
+        target: IDENTITY_SERVICE_API_AWS_ACCESS_KEY_ID
+      - source: DEV_IDENTITY_SERVICE_API_AWS_SECRET_ACCESS_KEY
+        target: IDENTITY_SERVICE_API_AWS_SECRET_ACCESS_KEY
       - source: DEV_KUBE_SERVER
         target: KUBE_SERVER
       - source: DEV_KUBE_TOKEN
@@ -71,7 +71,7 @@ pipeline:
     commands:
       - export IDENTITY_SERVICE_API_NAME="identity-service-api"
       - export IDENTITY_SERVICE_API_TAG=$${DRONE_COMMIT_SHA}
-      - export IDENTITY_SERVICE_API_SPRING_PROFILE_ACTIVE = "dev"
+      - export IDENTITY_SERVICE_API_SPRING_PROFILE_ACTIVE="dev"
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
@@ -86,16 +86,16 @@ pipeline:
   deploy_to_staging:
     image: quay.io/ukhomeofficedigital/kd
     secrets:
-      - source: STAGING_IDENTIY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
-        target: IDENTIY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
+      - source: STAGING_IDENTITY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
+        target: IDENTITY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
       - source: AWS_REGION
-        target: IDENTIY_SERVICE_API_AWS_REGION
+        target: IDENTITY_SERVICE_API_AWS_REGION
       - source: STAGING_IDENTITY_SERVICE_API_URL
-        target: IDENTIY_SERVICE_API_URL
+        target: IDENTITY_SERVICE_API_URL
       - source: STAGING_IDENTITY_SERVICE_API_AWS_ACCESS_KEY_ID
-        target: IDENTIY_SERVICE_API_AWS_ACCESS_KEY_ID
-      - source: STAGING_IDENTITY_SERVICE_API_SECRET_ACCESS_KEY
-        target: IDENTIY_SERVICE_API_AWS_SECRET_ACCESS_KEY
+        target: IDENTITY_SERVICE_API_AWS_ACCESS_KEY_ID
+      - source: STAGING_IDENTITY_SERVICE_API_AWS_SECRET_ACCESS_KEY
+        target: IDENTITY_SERVICE_API_AWS_SECRET_ACCESS_KEY
       - source: STAGING_KUBE_SERVER
         target: KUBE_SERVER
       - source: STAGING_KUBE_TOKEN
@@ -105,7 +105,7 @@ pipeline:
     commands:
       - export IDENTITY_SERVICE_API_NAME="identity-service-api"
       - export IDENTITY_SERVICE_API_TAG=$${DRONE_COMMIT_SHA}
-      - export IDENTITY_SERVICE_API_SPRING_PROFILE_ACTIVE = "staging"
+      - export IDENTITY_SERVICE_API_SPRING_PROFILE_ACTIVE="staging"
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
@@ -120,16 +120,16 @@ pipeline:
   deploy_to_production:
     image: quay.io/ukhomeofficedigital/kd
     secrets:
-      - source: PRODUCTION_IDENTIY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
-        target: IDENTIY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
+      - source: PRODUCTION_IDENTITY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
+        target: IDENTITY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
       - source: AWS_REGION
-        target: IDENTIY_SERVICE_API_AWS_REGION
+        target: IDENTITY_SERVICE_API_AWS_REGION
       - source: PRODUCTION_IDENTITY_SERVICE_API_URL
-        target: IDENTIY_SERVICE_API_URL
+        target: IDENTITY_SERVICE_API_URL
       - source: PRODUCTION_IDENTITY_SERVICE_API_AWS_ACCESS_KEY_ID
-        target: IDENTIY_SERVICE_API_AWS_ACCESS_KEY_ID
-      - source: PRODUCTION_IDENTITY_SERVICE_API_SECRET_ACCESS_KEY
-        target: IDENTIY_SERVICE_API_AWS_SECRET_ACCESS_KEY
+        target: IDENTITY_SERVICE_API_AWS_ACCESS_KEY_ID
+      - source: PRODUCTION_IDENTITY_SERVICE_API_AWS_SECRET_ACCESS_KEY
+        target: IDENTITY_SERVICE_API_AWS_SECRET_ACCESS_KEY
       - source: PRODUCTION_KUBE_SERVER
         target: KUBE_SERVER
       - source: PRODUCTION_KUBE_TOKEN
@@ -139,7 +139,7 @@ pipeline:
     commands:
       - export IDENTITY_SERVICE_API_NAME="identity-service-api"
       - export IDENTITY_SERVICE_API_TAG=$${DRONE_COMMIT_SHA}
-      - export IDENTITY_SERVICE_API_SPRING_PROFILE_ACTIVE = "production"
+      - export IDENTITY_SERVICE_API_SPRING_PROFILE_ACTIVE="production"
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml

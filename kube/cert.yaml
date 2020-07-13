@@ -1,9 +1,9 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: identity-service-api-pod-cert
+  name: {{ .IDENTITY_SERVICE_API_NAME }}-pod-cert
 spec:
-  secretName: identity-service-api-pod-cert
+  secretName: {{ .IDENTITY_SERVICE_API_NAME }}-pod-cert
   duration: 2160h # 90d
   renewBefore: 360h # 15d
   isCA: false
@@ -17,10 +17,10 @@ spec:
     - server auth
     - client auth
   dnsNames:
-    - identity-service-api
-    - identity-service-api.{{ .KUBE_NAMESPACE }}
-    - identity-service-api.{{ .KUBE_NAMESPACE }}.svc
-    - identity-service-api.{{ .KUBE_NAMESPACE }}.svc.cluster.local
+    - {{ .IDENTITY_SERVICE_API_NAME }}
+    - {{ .IDENTITY_SERVICE_API_NAME }}.{{ .KUBE_NAMESPACE }}
+    - {{ .IDENTITY_SERVICE_API_NAME }}.{{ .KUBE_NAMESPACE }}.svc
+    - {{ .IDENTITY_SERVICE_API_NAME }}.{{ .KUBE_NAMESPACE }}.svc.cluster.local
     - localhost
   ipAddresses:
     - 127.0.0.1

@@ -14,7 +14,7 @@ metadata:
     ingress.kubernetes.io/proxy-read-timeout: "3600"
 spec:
   rules:
-    - host: {{.IDENTIY_SERVICE_API_URL}}
+    - host: {{.IDENTITY_SERVICE_API_URL}}
       http:
         paths:
           - backend:
@@ -23,5 +23,5 @@ spec:
             path: /
   tls:
     - hosts:
-        - {{.IDENTIY_SERVICE_API_URL}}
-      secretName: {{.IDENTIY_SERVICE_API_URL}}-cmio
+        - {{.IDENTITY_SERVICE_API_URL}}
+      secretName: {{.IDENTITY_SERVICE_API_URL}}-cmio

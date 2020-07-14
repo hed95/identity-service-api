@@ -107,6 +107,6 @@ jacoco {
 
 bootJar {
     archiveName = "identity-service-api.jar"
-    mainClassName = 'io.digitalpatterns.identity.api.IdentityServiceApiApplication'
+    mainClassName = 'io.digital.patterns.identity.api.IdentityServiceApiApplication'
 }
 

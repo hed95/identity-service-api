@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: identity-service-api
+  name: {{ .IDENTITY_SERVICE_API_NAME }}
   labels:
-    name: identity-service-api
+    name: {{ .IDENTITY_SERVICE_API_NAME }}
 spec:
   ports:
     - name: https

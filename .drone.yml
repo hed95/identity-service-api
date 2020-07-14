@@ -1,0 +1,170 @@
+---
+pipeline:
+
+  synch_dev_secrets:
+    image: quay.io/ukhomeofficedigital/cop-secrets
+    environment:
+      - DRONE_SERVER=https://drone.acp.homeoffice.gov.uk
+      - DEPLOY_ENV=dev
+    secrets:
+      - source: DEV_DRONE_AWS_ACCESS_KEY_ID
+        target: AWS_ACCESS_KEY_ID
+      - source: DEV_DRONE_AWS_SECRET_ACCESS_KEY
+        target: AWS_SECRET_ACCESS_KEY
+      - source: DRONE_PUBLIC_TOKEN
+        target: DRONE_TOKEN
+    when:
+      environment: secrets
+      event: deployment
+
+  synch_staging_secrets:
+    image: quay.io/ukhomeofficedigital/cop-secrets
+    environment:
+      - DRONE_SERVER=https://drone.acp.homeoffice.gov.uk
+      - DEPLOY_ENV=staging
+    secrets:
+      - source: STAGING_DRONE_AWS_ACCESS_KEY_ID
+        target: AWS_ACCESS_KEY_ID
+      - source: STAGING_DRONE_AWS_SECRET_ACCESS_KEY
+        target: AWS_SECRET_ACCESS_KEY
+      - source: DRONE_PUBLIC_TOKEN
+        target: DRONE_TOKEN
+    when:
+      environment: secrets
+      event: deployment
+
+  synch_production_secrets:
+    image: quay.io/ukhomeofficedigital/cop-secrets
+    environment:
+      - DRONE_SERVER=https://drone.acp.homeoffice.gov.uk
+      - DEPLOY_ENV=production
+    secrets:
+      - source: PRODUCTION_DRONE_AWS_ACCESS_KEY_ID
+        target: AWS_ACCESS_KEY_ID
+      - source: PRODUCTION_DRONE_AWS_SECRET_ACCESS_KEY
+        target: AWS_SECRET_ACCESS_KEY
+      - source: DRONE_PUBLIC_TOKEN
+        target: DRONE_TOKEN
+    when:
+      environment: secrets
+      event: deployment
+
+  deploy_to_dev:
+    image: quay.io/ukhomeofficedigital/kd
+    secrets:
+      - source: DEV_IDENTITY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
+        target: IDENTITY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
+      - source: AWS_REGION
+        target: IDENTITY_SERVICE_API_AWS_REGION
+      - source: DEV_IDENTITY_SERVICE_API_URL
+        target: IDENTITY_SERVICE_API_URL
+      - source: DEV_IDENTITY_SERVICE_API_AWS_ACCESS_KEY_ID
+        target: IDENTITY_SERVICE_API_AWS_ACCESS_KEY_ID
+      - source: DEV_IDENTITY_SERVICE_API_AWS_SECRET_ACCESS_KEY
+        target: IDENTITY_SERVICE_API_AWS_SECRET_ACCESS_KEY
+      - source: DEV_KUBE_SERVER
+        target: KUBE_SERVER
+      - source: DEV_KUBE_TOKEN
+        target: KUBE_TOKEN
+      - source: DEV_KUBE_NAMESPACE_PRIVATE_COP
+        target: KUBE_NAMESPACE
+    commands:
+      - export IDENTITY_SERVICE_API_NAME="identity-service-api"
+      - export IDENTITY_SERVICE_API_TAG=$${DRONE_COMMIT_SHA}
+      - export IDENTITY_SERVICE_API_SPRING_PROFILE_ACTIVE="dev"
+      - kd --insecure-skip-tls-verify -f kube/cert.yml
+      - kd --insecure-skip-tls-verify -f kube/secret.yml
+      - kd --insecure-skip-tls-verify -f kube/network-policy.yml
+      - kd --insecure-skip-tls-verify -f kube/service.yml
+      - kd --insecure-skip-tls-verify -f kube/deployment.yml
+      - kd --insecure-skip-tls-verify -f kube/ingress.yml
+    when:
+      event: deployment
+      environment: dev
+      branch: master
+
+  deploy_to_staging:
+    image: quay.io/ukhomeofficedigital/kd
+    secrets:
+      - source: STAGING_IDENTITY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
+        target: IDENTITY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
+      - source: AWS_REGION
+        target: IDENTITY_SERVICE_API_AWS_REGION
+      - source: STAGING_IDENTITY_SERVICE_API_URL
+        target: IDENTITY_SERVICE_API_URL
+      - source: STAGING_IDENTITY_SERVICE_API_AWS_ACCESS_KEY_ID
+        target: IDENTITY_SERVICE_API_AWS_ACCESS_KEY_ID
+      - source: STAGING_IDENTITY_SERVICE_API_AWS_SECRET_ACCESS_KEY
+        target: IDENTITY_SERVICE_API_AWS_SECRET_ACCESS_KEY
+      - source: STAGING_KUBE_SERVER
+        target: KUBE_SERVER
+      - source: STAGING_KUBE_TOKEN
+        target: KUBE_TOKEN
+      - source: STAGING_KUBE_NAMESPACE_PRIVATE_COP
+        target: KUBE_NAMESPACE
+    commands:
+      - export IDENTITY_SERVICE_API_NAME="identity-service-api"
+      - export IDENTITY_SERVICE_API_TAG=$${DRONE_COMMIT_SHA}
+      - export IDENTITY_SERVICE_API_SPRING_PROFILE_ACTIVE="staging"
+      - kd --insecure-skip-tls-verify -f kube/cert.yml
+      - kd --insecure-skip-tls-verify -f kube/secret.yml
+      - kd --insecure-skip-tls-verify -f kube/network-policy.yml
+      - kd --insecure-skip-tls-verify -f kube/service.yml
+      - kd --insecure-skip-tls-verify -f kube/deployment.yml
+      - kd --insecure-skip-tls-verify -f kube/ingress.yml
+    when:
+      branch: master
+      event: deployment
+      environment: staging
+
+  deploy_to_production:
+    image: quay.io/ukhomeofficedigital/kd
+    secrets:
+      - source: PRODUCTION_IDENTITY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
+        target: IDENTITY_SERVICE_API_AWS_SECRET_MANAGER_ENABLED
+      - source: AWS_REGION
+        target: IDENTITY_SERVICE_API_AWS_REGION
+      - source: PRODUCTION_IDENTITY_SERVICE_API_URL
+        target: IDENTITY_SERVICE_API_URL
+      - source: PRODUCTION_IDENTITY_SERVICE_API_AWS_ACCESS_KEY_ID
+        target: IDENTITY_SERVICE_API_AWS_ACCESS_KEY_ID
+      - source: PRODUCTION_IDENTITY_SERVICE_API_AWS_SECRET_ACCESS_KEY
+        target: IDENTITY_SERVICE_API_AWS_SECRET_ACCESS_KEY
+      - source: PRODUCTION_KUBE_SERVER
+        target: KUBE_SERVER
+      - source: PRODUCTION_KUBE_TOKEN
+        target: KUBE_TOKEN
+      - source: PRODUCTION_KUBE_NAMESPACE_PRIVATE_COP
+        target: KUBE_NAMESPACE
+    commands:
+      - export IDENTITY_SERVICE_API_NAME="identity-service-api"
+      - export IDENTITY_SERVICE_API_TAG=$${DRONE_COMMIT_SHA}
+      - export IDENTITY_SERVICE_API_SPRING_PROFILE_ACTIVE="production"
+      - kd --insecure-skip-tls-verify -f kube/cert.yml
+      - kd --insecure-skip-tls-verify -f kube/secret.yml
+      - kd --insecure-skip-tls-verify -f kube/network-policy.yml
+      - kd --insecure-skip-tls-verify -f kube/service.yml
+      - kd --insecure-skip-tls-verify -f kube/deployment.yml
+      - kd --insecure-skip-tls-verify -f kube/ingress.yml
+    when:
+      branch: master
+      event: deployment
+      environment: production
+
+  notify:
+    image: plugins/slack
+    secrets: [ SLACK_WEBHOOK ]
+    channel: cop-deployments
+    username: Drone Build Watcher
+    template: >
+      {{#build.deployTo}}
+        *{{repo.name}} - Build {{build.number}} - {{uppercasefirst build.deployTo}} - {{uppercase build.status}}*
+        {{build.link}}
+      {{else}}
+        *{{repo.name}} - Build {{build.number}} - Development - {{uppercase build.status}}*
+        {{build.link}}
+      {{/build.deployTo}}
+    when:
+      branch: master
+      event: [ push, deployment ]
+      status: [ success, failure ]

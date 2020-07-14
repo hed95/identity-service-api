@@ -57,7 +57,7 @@ jacocoTestReport {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
+    implementation 'org.apache.camel.springboot:camel-spring-boot-starter:3.4.0'
     implementation 'org.springframework.cloud:spring-cloud-context:2.2.3.RELEASE'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.2.RELEASE'
 

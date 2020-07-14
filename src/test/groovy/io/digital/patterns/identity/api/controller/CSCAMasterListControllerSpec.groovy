@@ -18,6 +18,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static io.digital.patterns.identity.api.service.Routes.UPDATE_CSCA_MASTER_LIST_ROUTE
 
 @WebMvcTest(controllers = [CSCAMasterListController])
 class CSCAMasterListControllerSpec extends Specification {
@@ -45,7 +46,7 @@ class CSCAMasterListControllerSpec extends Specification {
 
     def 'can start a master list put'() {
         given: 'producer template is called'
-        1 * producerTemplate.asyncSendBody("direct:update-masterlist-route", _)
+        1 * producerTemplate.asyncSendBody(UPDATE_CSCA_MASTER_LIST_ROUTE, _)
 
         expect: '202 response'
         mvc.perform(put('/csca-masterlist')
@@ -62,7 +63,7 @@ class CSCAMasterListControllerSpec extends Specification {
 
     def '403 on put if not authorized'() {
         given: 'producer template is called'
-        0 * producerTemplate.asyncSendBody("direct:update-masterlist-route", _)
+        0 * producerTemplate.asyncSendBody("direct:update-csca-master-list-route", _)
 
         expect: '403 response'
         mvc.perform(put('/csca-masterlist')

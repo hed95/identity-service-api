@@ -10,3 +10,5 @@ spec:
       port: 443
       targetPort: 8443
       protocol: TCP
+  selector:
+    name: {{ .IDENTITY_SERVICE_API_NAME }}

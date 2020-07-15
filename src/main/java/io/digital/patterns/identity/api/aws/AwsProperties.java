@@ -12,6 +12,7 @@ public class AwsProperties {
     private String region;
     private String bucketName;
     private Credentials credentials;
+    private String cscaMasterListBucketName;
 
     @Data
     public static class Credentials {

@@ -20,11 +20,12 @@ server:
     key-store-type: PKCS12
     trust-store: ${javax.net.ssl.trustStore:/etc/keystore/cacerts}
     trust-store-password: ${javax.net.ssl.trustStorePassword:changeit}
-    trust-store-type: ${javax.net.ssl.trustStoreType:PKCS12}
+    trust-store-tengineype: ${javax.net.ssl.trustStoreType:PKCS12}
 
 aws:
   region: ${AWS_REGION:eu-west-2}
   bucket-name: ${aws.s3.identity.scanData:}
+  csca-master-list-bucket-name: ${aws.s3.csca.masterList:}
   credentials:
     access-key: ${AWS_ACCESS_KEY:}
     secret-Key: ${AWS_SECRET_KEY:}

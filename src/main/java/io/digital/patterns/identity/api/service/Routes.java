@@ -6,4 +6,5 @@ public class Routes {
     }
 
     public static final String UPDATE_CSCA_MASTER_LIST_ROUTE ="direct:update-csca-master-list-route";
+
 }

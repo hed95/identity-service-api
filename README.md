@@ -33,7 +33,11 @@ The following environment variables are required to load properties from AWS sec
   "ssl.enabled" : false,
   "javax.net.ssl.trustStore" : "/etc/keystore/cacerts",
   "javax.net.ssl.trustStorePassword" : "changeit",
-  "javax.net.ssl.trustStoreType" : "PKCS12"
+  "javax.net.ssl.trustStoreType" : "PKCS12",
+  "gpg.userId" : "test@lodev.xyz",
+  "gpg.password" : "test",
+  "gpg.privateKey" : "private key that is based 64 encoded",
+  "aws.s3.csca.masterList" : "location of the gpg encrypted master list in S3"
 }
 ```
 

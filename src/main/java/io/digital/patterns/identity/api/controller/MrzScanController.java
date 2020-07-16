@@ -1,7 +1,7 @@
 package io.digital.patterns.identity.api.controller;
 
-import io.digital.patterns.identity.api.service.MrzService;
 import io.digital.patterns.identity.api.model.MrzScan;
+import io.digital.patterns.identity.api.service.MrzService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

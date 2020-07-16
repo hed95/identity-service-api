@@ -63,6 +63,10 @@ dependencies {
     implementation 'org.apache.camel.springboot:camel-dataformat-starter:3.4.0'
     implementation 'org.apache.camel.springboot:camel-file-watch-starter:3.4.0'
 
+    implementation 'org.bouncycastle:bcpg-jdk15on:1.66'
+    implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.66'
+
+
     implementation 'org.springframework.cloud:spring-cloud-context:2.2.3.RELEASE'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.2.RELEASE'
 

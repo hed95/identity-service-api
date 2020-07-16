@@ -3,6 +3,7 @@ package io.digital.patterns.identity.api.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
+import com.google.common.util.concurrent.MoreExecutors;
 import io.digital.patterns.identity.api.Constants;
 import io.digital.patterns.identity.api.aws.AwsProperties;
 import io.digital.patterns.identity.api.model.CscaMasterListUploadRequest;
@@ -20,19 +21,22 @@ import org.bouncycastle.operator.ContentVerifierProvider;
 import org.bouncycastle.operator.DefaultDigestAlgorithmIdentifierFinder;
 import org.bouncycastle.operator.bc.BcECContentVerifierProviderBuilder;
 import org.bouncycastle.util.Store;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.security.Security;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.Supplier;
 
 import static io.digital.patterns.identity.api.Constants.CSCA_MASTER_LIST_KEY;
 import static java.lang.String.format;
@@ -92,12 +96,33 @@ public class CscaMasterListRouteConfiguration {
 
 
     @Bean
+    public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setThreadNamePrefix("identity-service-api-");
+        executor.setTaskDecorator(runnable -> () -> {
+            try {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                if (authentication != null) {
+                    MDC.put("userId", authentication.getName());
+                }
+                runnable.run();
+            } finally {
+                MDC.remove("userId");
+            }
+        });
+        executor.initialize();
+        return executor;
+    }
+
+
+    @Bean
     @SuppressWarnings("unchecked")
     public RouteBuilder cscaRequestRoute() {
         return new RouteBuilder() {
             @Override
             public void configure() {
                 from(Constants.UPDATE_CSCA_MASTER_LIST_ROUTE)
+                        .threads().executorService(threadPoolTaskExecutor().getThreadPoolExecutor())
                         .log("Received ${body}")
                         .process(exchange -> {
                             CscaMasterListUploadRequest request = exchange.getIn().getBody(CscaMasterListUploadRequest.class);

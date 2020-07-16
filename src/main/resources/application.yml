@@ -46,9 +46,11 @@ springdoc:
   show-actuator: true
   paths-to-exclude: "/error/**"
 
-
 management:
   endpoints:
     web:
       exposure:
         include: "health, info, prometheus, metrics,loggers"
+camel:
+  springboot:
+    use-mdc-logging: true

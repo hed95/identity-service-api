@@ -64,6 +64,7 @@ public class CscaMasterListController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.ETAG, cscaMasterList.getEtag())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=csca-masterlist.ml")
                 .body(cscaMasterList.getContent());
     }
 }

@@ -6,6 +6,7 @@ import io.digital.patterns.identity.api.model.CscaMasterListUploadRequest;
 import io.digital.patterns.identity.api.service.CscaMasterListService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,14 +56,13 @@ public class CscaMasterListController {
             @ApiResponse(responseCode = "200", description = "Successful response with content"),
             @ApiResponse(responseCode = "304", description = "Content has not changed so use local copy")
     })
-    public ResponseEntity<?> get(HttpServletRequest httpServletRequest) {
-        String etag = httpServletRequest.getHeader(HttpHeaders.ETAG);
+    public ResponseEntity<?> get(@RequestHeader(name = "ETag", required = false) String etag) {
         CscaMasterList cscaMasterList = cscaMasterListService.get(etag);
         if (cscaMasterList.getContent() == null) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.ok()
-                .header(HttpHeaders.ETAG, cscaMasterList.getEtag())
+                .eTag(cscaMasterList.getEtag())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=csca-masterlist.ml")
                 .body(cscaMasterList.getContent());

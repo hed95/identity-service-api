@@ -17,7 +17,7 @@
                             "thread": "%thread",
                             "class": "%logger{40}",
                             "message": "%message",
-                            "userId": "%X{userId}"
+                            "userId": "%X{userId:-}"
                             }
                         </pattern>
                     </pattern>

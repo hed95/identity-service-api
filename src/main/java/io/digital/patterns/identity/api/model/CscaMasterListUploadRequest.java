@@ -2,9 +2,13 @@ package io.digital.patterns.identity.api.model;
 
 import lombok.Data;
 
-@Data
-public class CSCAMasterListRequest {
+import javax.validation.constraints.NotNull;
 
+@Data
+public class CscaMasterListUploadRequest {
+
+    @NotNull
     private String bucketName;
+    @NotNull
     private String fileName;
 }

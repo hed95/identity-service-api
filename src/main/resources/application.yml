@@ -25,6 +25,7 @@ server:
 aws:
   region: ${AWS_REGION:eu-west-2}
   bucket-name: ${aws.s3.identity.scanData:}
+  csca-master-list-bucket-name: ${aws.s3.csca.masterList:}
   credentials:
     access-key: ${AWS_ACCESS_KEY:}
     secret-Key: ${AWS_SECRET_KEY:}
@@ -45,9 +46,11 @@ springdoc:
   show-actuator: true
   paths-to-exclude: "/error/**"
 
-
 management:
   endpoints:
     web:
       exposure:
         include: "health, info, prometheus, metrics,loggers"
+camel:
+  springboot:
+    use-mdc-logging: true

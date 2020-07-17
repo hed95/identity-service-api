@@ -33,7 +33,12 @@ The following environment variables are required to load properties from AWS sec
   "ssl.enabled" : false,
   "javax.net.ssl.trustStore" : "/etc/keystore/cacerts",
   "javax.net.ssl.trustStorePassword" : "changeit",
-  "javax.net.ssl.trustStoreType" : "PKCS12"
+  "javax.net.ssl.trustStoreType" : "PKCS12",
+  "gpg.userId" : "test@lodev.xyz",
+  "gpg.password" : "test",
+  "gpg.privateKey" : "private key that is based 64 encoded",
+  "aws.s3.csca.masterList" : "location of the gpg encrypted master list in S3",
+  "csCaCert" : "Base 64 encoded ca cert"
 }
 ```
 
@@ -67,3 +72,5 @@ This will prevent the admin endpoint from ever being exposed.
 ```
 {server address}/swagger/ui.html
 ```
+
+***Please refer to the Open API spec to get a better understanding of the different APIs.***

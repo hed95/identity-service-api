@@ -49,6 +49,7 @@ public class CscaMasterListService {
                 S3Object object = amazonS3.getObject(cscaMasterListBucketName, CSCA_MASTER_LIST_KEY);
                 String content = IOUtils.toString(object.getObjectContent(), StandardCharsets.UTF_8);
                 String eTag = object.getObjectMetadata().getETag();
+                list.setLastModified(object.getObjectMetadata().getLastModified());
                 list.setContent(content);
                 list.setEtag(eTag);
             } else {
@@ -61,10 +62,11 @@ public class CscaMasterListService {
                     S3Object object = amazonS3.getObject(cscaMasterListBucketName, CSCA_MASTER_LIST_KEY);
                     String content = IOUtils.toString(object.getObjectContent(), StandardCharsets.UTF_8);
                     list.setContent(content);
-                    list.setEtag(eTag);
                 } else {
                     log.info("eTag the same so not returning list");
                 }
+                list.setEtag(eTag);
+                list.setLastModified(objectMetadata.getLastModified());
             }
             return list;
         } catch (Exception e) {

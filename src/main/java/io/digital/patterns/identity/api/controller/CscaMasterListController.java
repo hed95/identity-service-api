@@ -6,7 +6,8 @@ import io.digital.patterns.identity.api.model.CscaMasterListUploadRequest;
 import io.digital.patterns.identity.api.service.CscaMasterListService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -51,20 +51,31 @@ public class CscaMasterListController {
              description = "This API returns a ETag in the header. If you make a subsequent requests with the ETag " +
             "then the API will check if the content has changed. If the content has changed," +
             " you will receive the list with new ETag. If the content has not changed," +
-            " you will get a 304 status code which means you should use the local copy")
-    @ApiResponses(value = {
+            " you will get a 304 status code which means you should use the local copy",
+    responses = {
             @ApiResponse(responseCode = "200", description = "Successful response with content"),
-            @ApiResponse(responseCode = "304", description = "Content has not changed so use local copy")
+            @ApiResponse(responseCode = "403", description = "Caller does not have the appropriate " +
+                    "roles to make this call",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "401", description = "Caller not authenticated to make this call",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "304", description = "Content has not changed so use local copy",
+            content = @Content(schema = @Schema()))
     })
     public ResponseEntity<?> get(@RequestHeader(name = "ETag", required = false) String etag) {
         CscaMasterList cscaMasterList = cscaMasterListService.get(etag);
         if (cscaMasterList.getContent() == null) {
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+                    .lastModified(cscaMasterList.getLastModified().getTime())
+                    .eTag(etag)
+                    .build();
+
         }
         return ResponseEntity.ok()
                 .eTag(cscaMasterList.getEtag())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=csca-masterlist.ml")
+                .lastModified(cscaMasterList.getLastModified().getTime())
                 .body(cscaMasterList.getContent());
     }
 }

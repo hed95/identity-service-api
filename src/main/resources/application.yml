@@ -43,6 +43,8 @@ springdoc:
       scope-separator:
       additional-query-string-params:
         -nonce: ${random.int[1,10000]}
+    display-request-duration: true
+    groups-order: desc
   show-actuator: true
   paths-to-exclude: "/error/**"
 

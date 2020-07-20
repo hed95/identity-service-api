@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.PathParameter;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
@@ -56,6 +58,13 @@ public class OpenApiConfiguration {
         return openApi -> openApi.getPaths().entrySet().stream()
                 .filter(stringPathItemEntry -> stringPathItemEntry.getKey().startsWith("/actuator/"))
                 .forEach(stringPathItemEntry -> {
+                    if (stringPathItemEntry.getKey().equalsIgnoreCase("/actuator/prometheus")) {
+                        stringPathItemEntry.getValue().getGet().getResponses()
+                                .get("200")
+                                    .setContent(new Content()
+                                            .addMediaType("text/plain; version=0.0.4;charset=utf-8",
+                                                    new MediaType().schema(new StringSchema())));
+                    }
                     String path = stringPathItemEntry.getKey();
                     Matcher matcher = pathPattern.matcher(path);
                     while (matcher.find()) {

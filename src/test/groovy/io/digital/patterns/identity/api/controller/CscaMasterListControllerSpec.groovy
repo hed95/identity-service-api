@@ -98,6 +98,7 @@ class CscaMasterListControllerSpec extends Specification {
         def list = new CscaMasterList()
         list.etag = 'etag'
         list.content = 'content'
+        list.lastModified = new Date()
         1 * cscaMasterListService.get(null) >> list
 
         expect: '200 response'
@@ -120,6 +121,7 @@ class CscaMasterListControllerSpec extends Specification {
         def list = new CscaMasterList()
         list.etag = 'etag'
         list.content = null
+        list.lastModified = new Date()
         1 * cscaMasterListService.get('etag') >> list
 
         expect: '304 response'

@@ -175,7 +175,7 @@ public class CscaMasterListRouteConfiguration {
                                     awsProperties.getCscaMasterListBucketName(), CSCA_MASTER_LIST_KEY,
                                     scratchFile);
                             exchange.getIn().setBody(result.getETag());
-                        }).log("Uploaded to S3 with eTag: ${body}");
+                        }).log("Uploaded to S3 with eTag: ${body}").end();
 
             }
         };

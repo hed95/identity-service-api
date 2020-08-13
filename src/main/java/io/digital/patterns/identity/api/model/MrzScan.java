@@ -36,14 +36,18 @@ public class MrzScan {
     )
     private String status;
 
-    @Schema(description = "Overall status of the scan. Whether it failed or succeeded")
+    @Schema(description = "Supporting message if scan failed. " +
+            "This should be human readable. Avoid putting stacktrace message. If possible use a code that can " +
+            "be correlated against exceptions")
     private String message;
 
     @NotNull
     private Mrz mrz;
 
+    @Schema(description = "OCR data, this is optional and not required")
     private OcrData ocrData;
 
+    @Schema(description = "NFC data, this is optional and not required")
     private Nfc nfc;
 
 }

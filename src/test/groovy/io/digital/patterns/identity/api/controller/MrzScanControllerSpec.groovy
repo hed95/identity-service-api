@@ -1,7 +1,9 @@
 package io.digital.patterns.identity.api.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.digital.patterns.identity.api.model.Mrz
 import io.digital.patterns.identity.api.model.MrzScan
+import io.digital.patterns.identity.api.model.MrzType
 import io.digital.patterns.identity.api.security.AuthorizationChecker
 import io.digital.patterns.identity.api.service.MrzService
 import org.spockframework.spring.SpringBean
@@ -66,23 +68,20 @@ class MrzScanControllerSpec extends Specification {
 
     def 'can post mrz'() {
         given: 'an MRZ scan'
-        def mrz = new MrzScan()
-        mrz.correlationId = 'id'
-        mrz.dateOfScan = new Date()
-        mrz.dob = new Date().toString()
-        mrz.doe = new Date().toString()
-        mrz.documentNumber = 'doc'
-        mrz.faceImage = 'face'.bytes
-        mrz.issuingCountry = 'test'
-        mrz.primaryIdentifier = 'test'
-        mrz.secondaryIdentifier = 'test 2'
-        mrz.mrzString = 'test'
-        mrz.scanningOfficer = 'test'
-        mrz.result = 'ok'
+        def scan = new MrzScan()
+        scan.correlationId = 'id'
+        scan.dateOfScan = new Date()
+        scan.scanningOfficer = 'test@test.com'
+        scan.status = 'SUCCESS'
+
+        scan.mrz = new Mrz()
+        scan.mrz.dateOfExpiry = '27/12/2000'
+        scan.mrz.dateOfBirth = '24/12/2000'
+        scan.mrz.type = MrzType.TD1
 
         expect: '201 response'
         mvc.perform(post('/mrz')
-        .content(new ObjectMapper().writeValueAsString(mrz))
+        .content(new ObjectMapper().writeValueAsString(scan))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(jwt()
                         .authorities([new SimpleGrantedAuthority('read'),
@@ -92,22 +91,19 @@ class MrzScanControllerSpec extends Specification {
 
     def 'cannot post mrz if correlation id is missing'() {
         given: 'an MRZ scan'
-        def mrz = new MrzScan()
-        mrz.dateOfScan = new Date()
-        mrz.dob = new Date().toString()
-        mrz.doe = new Date().toString()
-        mrz.documentNumber = 'doc'
-        mrz.faceImage = 'face'
-        mrz.issuingCountry = 'test'
-        mrz.primaryIdentifier = 'test'
-        mrz.secondaryIdentifier = 'test 2'
-        mrz.mrzString = 'test'
-        mrz.scanningOfficer = 'test'
-        mrz.result = 'ok'
+        def scan = new MrzScan()
+        scan.dateOfScan = new Date()
+        scan.scanningOfficer = 'test@test.com'
+        scan.status = 'SUCCESS'
+
+        scan.mrz = new Mrz()
+        scan.mrz.dateOfExpiry = '27/12/2000'
+        scan.mrz.dateOfBirth = '24/12/2000'
+        scan.mrz.type = MrzType.TD1
 
         expect: '201 response'
         mvc.perform(post('/mrz')
-                .content(new ObjectMapper().writeValueAsString(mrz))
+                .content(new ObjectMapper().writeValueAsString(scan))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(jwt()
                         .authorities([new SimpleGrantedAuthority('read'),
@@ -117,23 +113,21 @@ class MrzScanControllerSpec extends Specification {
 
     def 'cannot post mrz if user does not have role'() {
         given: 'an MRZ scan'
-        def mrz = new MrzScan()
-        mrz.result = 'ok'
-        mrz.correlationId = 'id'
-        mrz.dateOfScan = new Date()
-        mrz.dob = new Date().toString()
-        mrz.doe = new Date().toString()
-        mrz.documentNumber = 'doc'
-        mrz.faceImage = 'face'
-        mrz.issuingCountry = 'test'
-        mrz.primaryIdentifier = 'test'
-        mrz.secondaryIdentifier = 'test 2'
-        mrz.mrzString = 'test'
-        mrz.scanningOfficer = 'test'
+        def scan = new MrzScan()
+        scan.correlationId = 'id'
+        scan.dateOfScan = new Date()
+        scan.scanningOfficer = 'test@test.com'
+        scan.status = 'SUCCESS'
+
+        scan.mrz = new Mrz()
+        scan.mrz.dateOfExpiry = '27/12/2000'
+        scan.mrz.dateOfBirth = '24/12/2000'
+        scan.mrz.type = MrzType.TD1
+
 
         expect: '403 response'
         mvc.perform(post('/mrz')
-                .content(new ObjectMapper().writeValueAsString(mrz))
+                .content(new ObjectMapper().writeValueAsString(scan))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(jwt()
                         .authorities([new SimpleGrantedAuthority('read'),

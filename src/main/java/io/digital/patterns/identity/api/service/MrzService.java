@@ -70,7 +70,6 @@ public class MrzService {
             metadata.addUserMetadata("submittedby", mrzScan.getScanningOfficer());
             metadata.addUserMetadata("submissiondate", mrzScan.getDateOfScan().toString());
             metadata.addUserMetadata("correlationId", mrzScan.getCorrelationId());
-            metadata.addUserMetadata("primaryidentifier", mrzScan.getPrimaryIdentifier());
             File scratchFile = createTempFile(UUID.randomUUID().toString(), ".json");
 
             FileUtils.copyInputStreamToFile(IOUtils.toInputStream(

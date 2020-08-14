@@ -6,7 +6,9 @@ import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.digital.patterns.identity.api.aws.AwsProperties
+import io.digital.patterns.identity.api.model.Mrz
 import io.digital.patterns.identity.api.model.MrzScan
+import io.digital.patterns.identity.api.model.MrzType
 import org.testcontainers.containers.localstack.LocalStackContainer
 import spock.lang.Shared
 import spock.lang.Specification
@@ -49,28 +51,25 @@ class MrzServiceSpec extends Specification {
 
     def 'can create multiple scans for same id'() {
         given: 'a mrz scan'
-        def mrz = new MrzScan()
-        mrz.correlationId = 'id'
-        mrz.dateOfScan = new Date()
-        mrz.dob = new Date().toString()
-        mrz.doe = new Date().toString()
-        mrz.documentNumber = 'doc'
-        mrz.faceImage = 'face'
-        mrz.issuingCountry = 'test'
-        mrz.primaryIdentifier = 'test'
-        mrz.secondaryIdentifier = 'test 2'
-        mrz.mrzString = 'test'
-        mrz.scanningOfficer = 'test'
-        mrz.result = 'ok'
+        def scan = new MrzScan()
+        scan.correlationId = 'id'
+        scan.dateOfScan = new Date()
+        scan.scanningOfficer = 'test@test.com'
+        scan.status = 'SUCCESS'
+
+        scan.mrz = new Mrz()
+        scan.mrz.dateOfExpiry = '27/12/2000'
+        scan.mrz.dateOfBirth = '24/12/2000'
+        scan.mrz.type = MrzType.TD1
 
         when: 'scan is persisted'
-        def id = mrzService.create(mrz)
+        def id = mrzService.create(scan)
 
         then: 'id is not empty'
         id != ''
 
         when: 'another scan with the same id is saved'
-        def anotherId = mrzService.create(mrz)
+        def anotherId = mrzService.create(scan)
 
         then: 'id is not empty'
         anotherId != ''
@@ -79,40 +78,30 @@ class MrzServiceSpec extends Specification {
 
     def 'can get scans for id'() {
         given: 'a mrz scan'
-        MrzScan mrz = new MrzScan()
-        mrz.correlationId = 'newId'
-        mrz.dateOfScan = new Date()
-        mrz.dob = new Date().toString()
-        mrz.doe = new Date().toString()
-        mrz.documentNumber = 'doc'
-        mrz.faceImage = 'face'
-        mrz.issuingCountry = 'test'
-        mrz.primaryIdentifier = 'test'
-        mrz.secondaryIdentifier = 'test 2'
-        mrz.mrzString = 'test'
-        mrz.scanningOfficer = 'test'
-        mrz.result = 'ok'
-
-        and: 'scan is persisted'
-        mrzService.create(mrz)
+        MrzScan scan = new MrzScan()
+        scan.correlationId = 'newId'
+        scan.dateOfScan = new Date()
+        scan.scanningOfficer = 'test@test.com'
+        scan.status = 'SUCCESS'
+        mrzService.create(scan)
 
         and: 'another scan'
-        mrz = new MrzScan()
-        mrz.correlationId = 'newId'
-        mrz.dateOfScan = new Date()
-        mrz.dob = new Date().toString()
-        mrz.doe = new Date().toString()
-        mrz.documentNumber = 'doc2'
-        mrz.faceImage = 'face2'
-        mrz.issuingCountry = 'test2'
-        mrz.primaryIdentifier = 'test2'
-        mrz.secondaryIdentifier = 'test 22'
-        mrz.mrzString = 'test2'
-        mrz.scanningOfficer = 'test2'
-        mrz.result = 'ok'
+        scan = new MrzScan()
+        scan.correlationId = 'id'
+        scan.dateOfScan = new Date()
+        scan.scanningOfficer = 'test@test.com'
+        scan.status = 'SUCCESS'
+        mrzService.create(scan)
 
-        and: 'another scan with the same id is saved'
-        mrzService.create(mrz)
+        and: 'another scan'
+        scan = new MrzScan()
+        scan.mrz = new Mrz()
+        scan.correlationId = 'newId'
+        scan.mrz.dateOfExpiry = '27/12/2000'
+        scan.mrz.dateOfBirth = '24/12/2000'
+        scan.mrz.type = MrzType.TD1
+        mrzService.create(scan)
+
 
         when: 'a call to get scans is made'
         def scans = mrzService.getScans('newId')
@@ -120,47 +109,41 @@ class MrzServiceSpec extends Specification {
         then: 'scans should not be empty'
         scans.size() == 2
 
-        scans.first().primaryIdentifier == 'test'
-        scans.last().primaryIdentifier == 'test2'
-
     }
 
     def 'can delete'() {
         given: 'a mrz scan'
-        MrzScan mrz = new MrzScan()
-        mrz.correlationId = 'newId1'
-        mrz.dateOfScan = new Date()
-        mrz.dob = new Date().toString()
-        mrz.doe = new Date().toString()
-        mrz.documentNumber = 'doc'
-        mrz.faceImage = 'face'
-        mrz.issuingCountry = 'test'
-        mrz.primaryIdentifier = 'test'
-        mrz.secondaryIdentifier = 'test 2'
-        mrz.mrzString = 'test'
-        mrz.scanningOfficer = 'test'
-        mrz.result = 'ok'
+        MrzScan scan = new MrzScan()
+        scan.correlationId = 'id'
+        scan.dateOfScan = new Date()
+        scan.scanningOfficer = 'test@test.com'
+        scan.status = 'SUCCESS'
+
+        scan.mrz = new Mrz()
+        scan.mrz.dateOfExpiry = '27/12/2000'
+        scan.mrz.dateOfBirth = '24/12/2000'
+        scan.mrz.type = MrzType.TD1
 
         and: 'scan is persisted'
-        mrzService.create(mrz)
+        mrzService.create(scan)
+
+        and: 'scan is persisted'
+        mrzService.create(scan)
 
         and: 'another scan'
-        mrz = new MrzScan()
-        mrz.correlationId = 'newId1'
-        mrz.dateOfScan = new Date()
-        mrz.dob = new Date().toString()
-        mrz.doe = new Date().toString()
-        mrz.documentNumber = 'doc2'
-        mrz.faceImage = 'face2'
-        mrz.issuingCountry = 'test2'
-        mrz.primaryIdentifier = 'test2'
-        mrz.secondaryIdentifier = 'test 22'
-        mrz.mrzString = 'test2'
-        mrz.scanningOfficer = 'test2'
-        mrz.result = 'ok'
+        scan = new MrzScan()
+        scan.correlationId = 'id'
+        scan.dateOfScan = new Date()
+        scan.scanningOfficer = 'test@test.com'
+        scan.status = 'SUCCESS'
+
+        scan.mrz = new Mrz()
+        scan.mrz.dateOfExpiry = '27/12/2000'
+        scan.mrz.dateOfBirth = '24/12/2000'
+        scan.mrz.type = MrzType.TD1
 
         and: 'another scan with the same id is saved'
-        mrzService.create(mrz)
+        mrzService.create(scan)
 
 
         when: 'a call to delete is made'

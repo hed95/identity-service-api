@@ -20,6 +20,7 @@ public class Nfc {
     @Data
     @EqualsAndHashCode(callSuper=true)
     public static class NfcDocument extends Document {
+        @Schema(description = "A list of base 64 encoded strings of images")
         private String[] photos;
         private String chipMrz;
     }

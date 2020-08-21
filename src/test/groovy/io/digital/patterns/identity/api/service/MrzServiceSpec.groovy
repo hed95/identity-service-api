@@ -124,9 +124,9 @@ class MrzServiceSpec extends Specification {
         scan.dateOfScan = new Date()
         scan.scanningOfficer = 'test@test.com'
         scan.status = 'SUCCESS'
-        scan.workflowConfig = new Workflow()
-        scan.workflowConfig.processKey = 'mrzscan'
-        scan.workflowConfig.variableName = 'mrzcan'
+        scan.workflow = new Workflow()
+        scan.workflow.processKey = 'mrzscan'
+        scan.workflow.variableName = 'mrzcan'
 
         scan.mrz = new Mrz()
         scan.mrz.dateOfExpiry = '27/12/2000'

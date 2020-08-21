@@ -4,12 +4,23 @@ package io.digital.patterns.identity.api.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.digital.patterns.identity.api.ProcessInstance;
 import io.digital.patterns.identity.api.aws.AwsProperties;
 import io.digital.patterns.identity.api.model.MrzScan;
+import io.digital.patterns.identity.api.model.Workflow;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
 import java.io.File;
@@ -29,13 +40,18 @@ public class MrzService {
     private final ObjectMapper objectMapper;
     private final static
             SimpleDateFormat FORMAT = new SimpleDateFormat("YYYYMMDD'T'HHmmss");
+    private final RestTemplate restTemplate;
+    private final String workflowUrl;
 
     public MrzService(AmazonS3 amazonS3,
                       AwsProperties awsProperties,
-                      ObjectMapper objectMapper) {
+                      ObjectMapper objectMapper, RestTemplate restTemplate,
+                      @Value("${workflowApi.url}") String workflowUrl) {
         this.amazonS3 = amazonS3;
         this.awsProperties = awsProperties;
         this.objectMapper = objectMapper;
+        this.restTemplate = restTemplate;
+        this.workflowUrl = workflowUrl;
     }
 
     public List<MrzScan> getScans(String correlationId) {
@@ -79,6 +95,51 @@ public class MrzService {
             request.setMetadata(metadata);
             final PutObjectResult putObjectResult = amazonS3.putObject(request);
             log.info("Uploaded to S3 '{}'", putObjectResult.getETag());
+
+            Workflow workflow = mrzScan.getWorkflow();
+            if (workflow != null) {
+                JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken)
+                        SecurityContextHolder.getContext().getAuthentication();
+                log.info("This submission will be sent to workflow service {}, {}, {}",
+                        workflow.getWorkflowUrl(),
+                        workflow.getProcessKey(),
+                        workflow.getVariableName());
+
+                HttpHeaders httpHeaders = new HttpHeaders();
+                httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+                httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
+                httpHeaders.setBearerAuth(authenticationToken.getToken().getTokenValue());
+                JSONObject payload = new JSONObject();
+                payload.put("businessKey", mrzScan.getCorrelationId());
+
+                JSONObject variable = new JSONObject();
+                JSONObject alertJson = new JSONObject();
+                alertJson.put("value", objectMapper.writeValueAsString(mrzScan));
+                alertJson.put("type", "json");
+                variable.put(workflow.getVariableName(), alertJson);
+                payload.put("variables", variable);
+
+                HttpEntity<?> httpEntity = new HttpEntity<>(
+                        payload.toString(),
+                        httpHeaders
+                );
+
+                String url = Optional.ofNullable(workflow.getWorkflowUrl())
+                            .orElse(this.workflowUrl) + "/camunda/engine-rest/process-definition/key/"
+                        + workflow.getProcessKey() + "/start";
+                ProcessInstance processInstance = restTemplate.exchange(
+                        url,
+                        HttpMethod.POST,
+                        httpEntity,
+                        ProcessInstance.class,
+                        new HashMap<>()
+                ).getBody();
+                log.info("Process instance started {} for mrz scan {}",
+                        Objects.requireNonNull(processInstance).getId(),
+                        mrzScan.getCorrelationId());
+
+            }
+
             return mrzScan.getCorrelationId();
         } catch (Exception e) {
             throw new RuntimeException(e);

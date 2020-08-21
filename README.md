@@ -38,7 +38,8 @@ The following environment variables are required to load properties from AWS sec
   "gpg.password" : "test",
   "gpg.privateKey" : "private key that is based 64 encoded",
   "aws.s3.csca.masterList" : "location of the gpg encrypted master list in S3",
-  "csCaCert" : "Base 64 encoded ca cert"
+  "csCaCert" : "Base 64 encoded ca cert",
+  "workflowApi.url" : "http://localhost:8080"
 }
 ```
 
@@ -74,3 +75,18 @@ This will prevent the admin endpoint from ever being exposed.
 ```
 
 ***Please refer to the Open API spec to get a better understanding of the different APIs.***
+
+
+#### Submit to workflow
+
+There is an additional option within the model that allows you to submit the mrz scan to a camunda workflow. An example:
+
+```json
+"workflow": {
+ "processKey" : "test",
+ "variableName": "mrzScan",
+ "workflowUrl" : "http://camunda.workflow.io"    
+} 
+```
+
+The workflow url is optional. If this is not present then the service will use the default configured on start up.

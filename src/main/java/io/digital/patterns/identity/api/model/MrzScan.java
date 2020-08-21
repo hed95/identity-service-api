@@ -50,4 +50,8 @@ public class MrzScan {
     @Schema(description = "NFC data, this is optional and not required")
     private Nfc nfc;
 
+    @Schema(description = "Optional configuration that enables the data to be posted to a workflow engine." +
+            "This is not required. If not provided then the data will only be persisted to S3.")
+    private Workflow workflow;
+
 }
